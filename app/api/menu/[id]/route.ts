@@ -3,8 +3,8 @@ import MenuModel from "@/app/common/database/models/Menu";
 import { Menu } from "@/app/common/types/menu";
 import { getCloudnary } from "@/app/common/util/cloudnary.util";
 import { dataUrlToFileBuffer } from "@/app/common/util/uri-to-file";
-import { UploadApiResponse } from "cloudinary";
-import { UploadApiErrorResponse } from "cloudinary";
+import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
@@ -103,6 +103,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
         if (!updated) return NextResponse.json({ message: 'Menu item not found' }, { status: 404 });
 
+        revalidatePath('/');
+
         return NextResponse.json({ message: 'Menu item updated successfully', data: updated }, { status: 200 });
     } catch (err) {
         if (err instanceof SyntaxError) return NextResponse.json({ message: 'Invalid JSON payload' }, { status: 400 });
@@ -120,6 +122,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
         await connectToDatabase();
         const removed = await MenuModel.findByIdAndDelete(id);
         if (!removed) return NextResponse.json({ message: 'Not found' }, { status: 404 });
+
+        revalidatePath('/');
+
         return NextResponse.json({ message: 'Deleted' }, { status: 200 });
     } catch (err) {
         console.error('DELETE /api/menu/[id] error', err);

@@ -3,6 +3,7 @@ import MenuModel from "@/app/common/database/models/Menu";
 import { getCloudnary } from "@/app/common/util/cloudnary.util";
 import { dataUrlToFileBuffer } from "@/app/common/util/uri-to-file";
 import { UploadApiErrorResponse, UploadApiResponse } from "cloudinary";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
@@ -77,6 +78,8 @@ export async function POST(req: NextRequest) {
             price: payload.price,
             menuImgUrl: uploadedImgUrl,
         });
+
+        revalidatePath('/');
 
         return NextResponse.json({ message: 'Menu created successfully', data: menuCreated }, { status: 201 });
     } catch (err) {
