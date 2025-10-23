@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@tailwind utilities;
+
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+
+:root {
+  --background: #1F2937;
+    --foreground: #dad5d5;
+    --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --header-height: 5.02rem;
+}
+
+/* Override font for Amharic language */
+html[lang="am"] {
+  --font-sans: var(--font-geez-manuscript), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@custom-variant dark (&:where(.dark, .dark *)); 
+
+@theme {
+  --color-primary-50:  #fffbeb;
+  --color-primary-100: #fff4c6;
+  --color-primary-200: #ffe688;
+  --color-primary-300: #ffd44a;
+  --color-primary-400: #ffc430;
+  --color-primary-500: #f99e07;
+  --color-primary-600: #dd7602;
+  --color-primary-700: #b75206;
+  --color-primary-800: #943e0c;
+  --color-primary-900: #7a330d;
+  --color-primary-950: #461a02;
+
+  /* --mk-card-crop-bg: #fff; */
+}
+
+/* Tailwind's gray-800 */
+/* .dark {
+  --mk-card-crop-bg: #1f2937; 
+} */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1F2937;
+    --foreground: #dad5d5;
+  }
+}
+
+html,
+body {
+  height: 100vh;
+  overflow-y: auto;
+
+  @apply bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-200;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
+
+button, select, option {
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  cursor: pointer;
+}
+/* 
+.links {
+    width: fit-content;
+    text-decoration: none;
+    padding: 0rem 0.5rem;
+    border-radius: 5px;
+    transition: all .2s ease-in;
+}
+
+.links:hover {
+    color: white;
+    background: #015997;
+} */
+
+.scrollbar-thin::-webkit-scrollbar {
+    width: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+/* Hides the scrollbar buttons (arrows) */
+.scrollbar-thin::-webkit-scrollbar-button {
+    display: none;
+}
+
+/* For Firefox */
+.scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+
+.perspective {
+  perspective: 1000px;
+}
