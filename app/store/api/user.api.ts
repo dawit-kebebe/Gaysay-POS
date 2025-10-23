@@ -1,10 +1,6 @@
-// user.api.ts
-
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { baseQuery } from './base.api'; // Assuming base.api.ts exists and exports baseQuery
+import { baseQuery } from './base.api';
 import { CreateUserPayload, UpdatePasswordPayload, UpdateUserPayload, User } from '@/app/common/types/user';
-
-
 
 export const userApi = createApi({
     reducerPath: 'userApi',
@@ -12,26 +8,37 @@ export const userApi = createApi({
     tagTypes: ['User'],
 
     endpoints: (builder) => ({
-        // 1. GET (Read all)
         getUsers: builder.query<User[], void>({
             query: () => ({
                 url: '/api/users',
                 method: 'GET',
             }),
-            providesTags: ['User'],
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map(({ id }) => ({ type: 'User' as const, id })),
+                        { type: 'User', id: 'LIST' },
+                    ]
+                    : [{ type: 'User', id: 'LIST' }],
         }),
 
-        // 2. POST (Create)
+        getUser: builder.query<User, string>({
+            query: (id) => ({
+                url: `/api/users/${id}`,
+                method: 'GET',
+            }),
+            providesTags: (result, error, id) => [{ type: 'User', id }],
+        }),
+
         createUser: builder.mutation<User, CreateUserPayload>({
             query: (newUser) => ({
                 url: '/api/users',
                 method: 'POST',
                 body: newUser,
             }),
-            invalidatesTags: ['User'],
+            invalidatesTags: [{ type: 'User', id: 'LIST' }],
         }),
 
-        // 3. PUT (Update details)
         updateUser: builder.mutation<User, UpdateUserPayload>({
             query: ({ id, ...patch }) => ({
                 url: `/api/users/${id}`,
@@ -41,30 +48,28 @@ export const userApi = createApi({
             invalidatesTags: (result, error, { id }) => [{ type: 'User', id }],
         }),
 
-        // 4. PUT (Update password - separate endpoint often)
         updateUserPassword: builder.mutation<void, UpdatePasswordPayload>({
             query: ({ id, newPassword }) => ({
-                url: `/api/users/${id}/password`, // Assuming a specific password update endpoint
+                url: `/api/users/${id}/password`,
                 method: 'PUT',
                 body: { newPassword },
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'User', id }], // Optionally invalidate to force data refresh
+            invalidatesTags: (result, error, { id }) => [{ type: 'User', id }],
         }),
 
-        // 5. DELETE (Delete)
         deleteUser: builder.mutation<void, string>({
             query: (id) => ({
                 url: `/api/users/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'User', id }],
+            invalidatesTags: (result, error, id) => [{ type: 'User', id }, { type: 'User', id: 'LIST' }],
         }),
     }),
 });
 
-// Export hooks
 export const {
     useGetUsersQuery,
+    useGetUserQuery,
     useCreateUserMutation,
     useUpdateUserMutation,
     useUpdateUserPasswordMutation,
