@@ -39,7 +39,7 @@ const PurchaseRow = memo(({ item, isSelected, onToggle, onPreview, onDelete }: {
     onPreview: (item: PurchaseItem) => void;
     onDelete: (item: PurchaseItem) => void;
 }) => {
-    const formattedPrice = useMemo(() => `$${(item.unitPrice ?? 0).toFixed(2)}`, [item.unitPrice]);
+    const formattedPrice = useMemo(() => Number.parseFloat((item.unitPrice ?? 0).toFixed(2)), [item.unitPrice]);
 
     const handlePreview = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
@@ -58,8 +58,9 @@ const PurchaseRow = memo(({ item, isSelected, onToggle, onPreview, onDelete }: {
             </TableCell>
             <TableCell className="font-medium text-gray-900 dark:text-white">{item.name}</TableCell>
             <TableCell>{formattedPrice}</TableCell>
-            <TableCell className='max-w-xs truncate'>{item.description || 'No description'}</TableCell>
             <TableCell>{item.quantity}</TableCell>
+            <TableCell>{item.quantity * formattedPrice}</TableCell>
+            <TableCell className='max-w-xs truncate'>{item.description || 'No description'}</TableCell>
             <TableCell>
                 <div className="flex gap-2">
                     <IconButton onClick={handlePreview}><FiEye /></IconButton>
@@ -153,8 +154,9 @@ export function ExpenseTable() {
                             {/* <TableHeadCell>Photo</TableHeadCell> */}
                             <TableHeadCell>Name</TableHeadCell>
                             <TableHeadCell>Price</TableHeadCell>
-                            <TableHeadCell>Description</TableHeadCell>
                             <TableHeadCell>Quantity</TableHeadCell>
+                            <TableHeadCell>Sub Total</TableHeadCell>
+                            <TableHeadCell>Description</TableHeadCell>
                             <TableHeadCell>
                                 <span className="sr-only">Actions</span>
                             </TableHeadCell>

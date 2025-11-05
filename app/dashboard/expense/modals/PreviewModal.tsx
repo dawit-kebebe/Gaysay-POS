@@ -7,13 +7,14 @@ import { toggleOpenPreviewModal } from '@/app/store/slice/expense.slice';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { FaPencil } from 'react-icons/fa6';
+import { FaEquals, FaPencil } from 'react-icons/fa6';
 import { FiEye } from 'react-icons/fi';
 import { PurchaseItem, UpdatePurchaseItemPayload } from '@/app/common/types/purchase'; // Assuming this path is correct
 import { useUpdatePurchaseMutation } from '@/app/store/api/expense.api';
 import { addToast } from '@/app/store/slice/toast.slice';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
+import { FaTimes } from 'react-icons/fa';
 
 // Schema based on UpdatePurchaseItemPayload
 const schema: yup.ObjectSchema<UpdatePurchaseItemPayload> = yup.object({
@@ -34,8 +35,9 @@ const PreviewModal = () => {
 
     // Default to preview mode
     const [previewOnly, setPreviewOnly] = useState(true);
+    const [total, setTotal] = useState(0.00);
 
-    const [updatePurchase, { isLoading, isSuccess, isError, error}] = useUpdatePurchaseMutation();
+    const [updatePurchase, { isLoading, isSuccess, isError, error }] = useUpdatePurchaseMutation();
 
     const item = selectedPurchases[0];
 
@@ -44,6 +46,7 @@ const PreviewModal = () => {
         handleSubmit,
         formState: { errors },
         reset,
+        watch,
         setValue,
     } = useForm<UpdatePurchaseItemPayload>({
         resolver: yupResolver(schema),
@@ -63,6 +66,16 @@ const PreviewModal = () => {
             reset();
         }
     }, [item, setValue, reset]);
+
+    const unitPrice = watch('unitPrice');
+    const quantity = watch('quantity')
+
+    useEffect(() => {
+        if (unitPrice && quantity) {
+
+            setTotal(Number.parseFloat((unitPrice * quantity).toFixed(2)));
+        }
+    }, [unitPrice, quantity, setTotal])
 
     // handleClose hook (UNCONDITIONAL HOOK)
     const handleClose = useCallback(() => {
@@ -145,42 +158,58 @@ const PreviewModal = () => {
                                 <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
                             )}
                         </div>
+                        <div className='flex flex-nowrap items-end gap-2'>
 
-                        {/* Unit Price Input */}
-                        <div>
-                            <div className="mb-2 block">
-                                <Label htmlFor="unitPrice">Unit Price <span className='text-lg text-red-500'>{'*'}</span></Label>
+                            {/* Unit Price Input */}
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label htmlFor="unitPrice">Unit Price <span className='text-lg text-red-500'>{'*'}</span></Label>
+                                </div>
+                                <TextInput
+                                    id='unitPrice'
+                                    type='number'
+                                    step='0.01'
+                                    placeholder='0.00'
+                                    {...register('unitPrice', { valueAsNumber: true })}
+                                    color={errors.unitPrice ? 'failure' : undefined}
+                                    disabled={previewOnly || isLoading}
+                                />
+                                {errors.unitPrice && (
+                                    <p className="mt-1 text-xs text-red-600">{errors.unitPrice.message}</p>
+                                )}
                             </div>
-                            <TextInput
-                                id='unitPrice'
-                                type='number'
-                                step='0.01'
-                                placeholder='0.00'
-                                {...register('unitPrice', { valueAsNumber: true })}
-                                color={errors.unitPrice ? 'failure' : undefined}
-                                disabled={previewOnly || isLoading}
-                            />
-                            {errors.unitPrice && (
-                                <p className="mt-1 text-xs text-red-600">{errors.unitPrice.message}</p>
-                            )}
-                        </div>
 
-                        {/* Quantity Input */}
-                        <div>
-                            <div className="mb-2 block">
-                                <Label htmlFor="quantity">Quantity <span className='text-lg text-red-500'>{'*'}</span></Label>
+                            <FaTimes className='mb-4' />
+                            {/* Quantity Input */}
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label htmlFor="quantity">Quantity <span className='text-lg text-red-500'>{'*'}</span></Label>
+                                </div>
+                                <TextInput
+                                    id='quantity'
+                                    type='number'
+                                    placeholder='1'
+                                    {...register('quantity', { valueAsNumber: true })}
+                                    color={errors.quantity ? 'failure' : undefined}
+                                    disabled={previewOnly || isLoading}
+                                />
+                                {errors.quantity && (
+                                    <p className="mt-1 text-xs text-red-600">{errors.quantity.message}</p>
+                                )}
                             </div>
-                            <TextInput
-                                id='quantity'
-                                type='number'
-                                placeholder='1'
-                                {...register('quantity', { valueAsNumber: true })}
-                                color={errors.quantity ? 'failure' : undefined}
-                                disabled={previewOnly || isLoading}
-                            />
-                            {errors.quantity && (
-                                <p className="mt-1 text-xs text-red-600">{errors.quantity.message}</p>
-                            )}
+                            <FaEquals className='mb-4' />
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label htmlFor="total">Total</Label>
+                                </div>
+                                <TextInput
+                                    id='total'
+                                    type='number'
+                                    placeholder='0.00'
+                                    value={total}
+                                    disabled
+                                />
+                            </div>
                         </div>
 
                         {/* Description Input */}

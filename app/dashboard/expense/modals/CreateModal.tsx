@@ -1,17 +1,19 @@
 "use client";
 
+import { CreatePurchaseItemPayload } from '@/app/common/types/purchase'; // Assuming the type is at this path
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { useCreatePurchaseMutation } from '@/app/store/api/expense.api';
 import { toggleOpenCreateModal } from '@/app/store/slice/expense.slice';
 import { addToast } from '@/app/store/slice/toast.slice';
-import { Button, Label, Modal, ModalBody, ModalHeader, Spinner, Textarea, TextInput } from 'flowbite-react';
-import React, { useCallback } from 'react';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { CreatePurchaseItemPayload } from '@/app/common/types/purchase'; // Assuming the type is at this path
-import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { Button, Label, Modal, ModalBody, ModalHeader, Spinner, Textarea, TextInput } from 'flowbite-react';
+import { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { FaTimes } from 'react-icons/fa';
+import { FaEquals } from 'react-icons/fa6';
+import * as yup from 'yup';
 
 // Schema based on CreatePurchaseItemPayload
 const schema: yup.ObjectSchema<CreatePurchaseItemPayload> = yup.object({
@@ -24,6 +26,8 @@ const schema: yup.ObjectSchema<CreatePurchaseItemPayload> = yup.object({
 
 const CreateModal = () => {
     const dispatch = useAppDispatch();
+    const [total, setTotal] = useState(0.00);
+
     const openCreateModal = useAppSelector((state) => state.expense.openCreateModal);
 
     const [createPurchase, { isLoading, isSuccess, isError, error }] = useCreatePurchaseMutation();
@@ -32,6 +36,7 @@ const CreateModal = () => {
         register,
         handleSubmit,
         formState: { errors },
+        watch,
         reset,
     } = useForm<CreatePurchaseItemPayload>({
         resolver: yupResolver(schema),
@@ -47,7 +52,17 @@ const CreateModal = () => {
         await createPurchase(formData);
     }, [createPurchase]);
 
-    React.useEffect(() => {
+    const unitPrice = watch('unitPrice');
+    const quantity = watch('quantity')
+
+    useEffect(() => {
+        if (unitPrice && quantity) {
+
+            setTotal(Number.parseFloat((unitPrice * quantity).toFixed(2)));
+        }
+    }, [unitPrice, quantity, setTotal])
+
+    useEffect(() => {
         if (isSuccess) {
             dispatch(addToast('Purchase item created successfully.', 'success'));
             handleClose();
@@ -91,38 +106,52 @@ const CreateModal = () => {
                                 <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>
                             )}
                         </div>
-
-                        <div>
-                            <div className="mb-2 block">
-                                <Label htmlFor="unitPrice">Unit Price <span className='text-lg text-red-500'>{'*'}</span></Label>
+                        <div className='flex flex-nowrap items-end gap-2'>
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label htmlFor="unitPrice">Unit Price <span className='text-lg text-red-500'>{'*'}</span></Label>
+                                </div>
+                                <TextInput
+                                    id='unitPrice'
+                                    type='number'
+                                    step='0.01'
+                                    placeholder='0.00'
+                                    {...register('unitPrice', { valueAsNumber: true })}
+                                    color={errors.unitPrice ? 'failure' : undefined}
+                                />
+                                {errors.unitPrice && (
+                                    <p className="mt-1 text-xs text-red-600">{errors.unitPrice.message}</p>
+                                )}
                             </div>
-                            <TextInput
-                                id='unitPrice'
-                                type='number'
-                                step='0.01'
-                                placeholder='0.00'
-                                {...register('unitPrice', { valueAsNumber: true })}
-                                color={errors.unitPrice ? 'failure' : undefined}
-                            />
-                            {errors.unitPrice && (
-                                <p className="mt-1 text-xs text-red-600">{errors.unitPrice.message}</p>
-                            )}
-                        </div>
-
-                        <div>
-                            <div className="mb-2 block">
-                                <Label htmlFor="quantity">Quantity <span className='text-lg text-red-500'>{'*'}</span></Label>
+                            <FaTimes className='mb-4' />
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label htmlFor="quantity">Quantity <span className='text-lg text-red-500'>{'*'}</span></Label>
+                                </div>
+                                <TextInput
+                                    id='quantity'
+                                    type='number'
+                                    placeholder='1'
+                                    {...register('quantity', { valueAsNumber: true })}
+                                    color={errors.quantity ? 'failure' : undefined}
+                                />
+                                {errors.quantity && (
+                                    <p className="mt-1 text-xs text-red-600">{errors.quantity.message}</p>
+                                )}
                             </div>
-                            <TextInput
-                                id='quantity'
-                                type='number'
-                                placeholder='1'
-                                {...register('quantity', { valueAsNumber: true })}
-                                color={errors.quantity ? 'failure' : undefined}
-                            />
-                            {errors.quantity && (
-                                <p className="mt-1 text-xs text-red-600">{errors.quantity.message}</p>
-                            )}
+                            <FaEquals className='mb-4' />
+                            <div>
+                                <div className="mb-2 block">
+                                    <Label htmlFor="total">Total</Label>
+                                </div>
+                                <TextInput
+                                    id='total'
+                                    type='number'
+                                    placeholder='0.00'
+                                    value={total}
+                                    disabled
+                                />
+                            </div>
                         </div>
 
                         <div>
