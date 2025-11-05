@@ -1,6 +1,6 @@
 import { Schema, model, models, type Document, type Model } from 'mongoose'
-import { AuditDocument } from '../../types/audit'
-import { PurchaseItem } from '../../types/purchase'
+import { AuditDocument } from '@/app/common/types/audit'
+import { PurchaseItem } from '@/app/common/types/purchase'
 
 interface PurchaseDocument extends AuditDocument, Document, Omit<PurchaseItem, 'id' | 'createdAt' | 'updatedAt'> { }
 

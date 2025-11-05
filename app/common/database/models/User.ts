@@ -1,7 +1,7 @@
 import { Role } from '@/app/common/types/role'
 import type { User as UserType } from '@/app/common/types/user'
 import { Schema, model, models, type Document, type Model } from 'mongoose'
-import { AuditDocument } from '../../types/audit'
+import { AuditDocument } from '@/app/common/types/audit'
 
 interface UserDocument extends AuditDocument, Document, Omit<UserType, 'id'> { }
 

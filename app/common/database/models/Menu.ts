@@ -1,6 +1,6 @@
 import { Schema, model, models, type Document, type Model } from 'mongoose'
-import { AuditDocument } from '../../types/audit'
-import { Menu } from '../../types/menu'
+import { AuditDocument } from '@/app/common/types/audit'
+import { Menu } from '@/app/common/types/menu'
 
 interface MenuDocument extends AuditDocument, Document, Omit<Menu, 'id'> { }
 

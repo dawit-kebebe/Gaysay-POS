@@ -1,6 +1,6 @@
 "use client";
 
-import { CreatePurchaseItemPayload } from '@/app/common/types/purchase'; // Assuming the type is at this path
+import { CreatePurchaseItemPayload } from '@/app/common/types/purchase';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { useCreatePurchaseMutation } from '@/app/store/api/expense.api';
 import { toggleOpenCreateModal } from '@/app/store/slice/expense.slice';
@@ -53,14 +53,14 @@ const CreateModal = () => {
     }, [createPurchase]);
 
     const unitPrice = watch('unitPrice');
-    const quantity = watch('quantity')
+    const quantity = watch('quantity');
 
     useEffect(() => {
         if (unitPrice && quantity) {
 
             setTotal(Number.parseFloat((unitPrice * quantity).toFixed(2)));
         }
-    }, [unitPrice, quantity, setTotal])
+    }, [unitPrice, quantity])
 
     useEffect(() => {
         if (isSuccess) {

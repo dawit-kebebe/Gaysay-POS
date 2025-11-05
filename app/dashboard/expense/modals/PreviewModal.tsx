@@ -68,20 +68,20 @@ const PreviewModal = () => {
     }, [item, setValue, reset]);
 
     const unitPrice = watch('unitPrice');
-    const quantity = watch('quantity')
+    const quantity = watch('quantity');
 
     useEffect(() => {
-        if (unitPrice && quantity) {
-
-            setTotal(Number.parseFloat((unitPrice * quantity).toFixed(2)));
+        if (unitPrice != null && quantity != null) {
+            setTotal(Math.round(unitPrice * quantity * 100) / 100);
         }
-    }, [unitPrice, quantity, setTotal])
+    }, [unitPrice, quantity]);
 
     // handleClose hook (UNCONDITIONAL HOOK)
     const handleClose = useCallback(() => {
         dispatch(toggleOpenPreviewModal());
         reset();
         setPreviewOnly(true); // Reset to preview mode on close
+        setTotal(0.00);
     }, [dispatch, reset]);
 
     const onSubmit = useCallback(async (formData: UpdatePurchaseItemPayload) => {

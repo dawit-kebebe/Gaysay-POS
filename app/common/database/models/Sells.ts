@@ -1,5 +1,5 @@
 import mongoose, { Schema, model, models, type Document, type Model } from 'mongoose'
-import { AuditDocument } from '../../types/audit'
+import { AuditDocument } from '@/app/common/types/audit'
 
 interface SellsDocument extends AuditDocument, Document {
     itemId: Schema.Types.ObjectId,

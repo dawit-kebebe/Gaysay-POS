@@ -1,5 +1,6 @@
 import connectToDatabase from "@/app/common/database";
 import SellsModel from "@/app/common/database/models/Sells";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

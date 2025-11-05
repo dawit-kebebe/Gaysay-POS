@@ -1,5 +1,6 @@
 import connectToDatabase from "@/app/common/database";
 import SellsModel from "@/app/common/database/models/Sells";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -11,6 +12,10 @@ export async function POST(req: NextRequest) {
         }
 
         await connectToDatabase();
+
+        if (!mongoose.models.Menu) {
+            await import('@/app/common/database/models/Menu')
+        }
 
         const alreadyOpenedSells = await SellsModel.findOne({ itemId: payload.itemId, isClosed: false });
 

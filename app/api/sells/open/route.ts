@@ -1,10 +1,14 @@
 import connectToDatabase from "@/app/common/database";
 import SellsModel from "@/app/common/database/models/Sells";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
     try {
         await connectToDatabase();
+        if (!mongoose.models.Menu) {
+            await import('@/app/common/database/models/Menu')
+        }
         const sells = await SellsModel.find({ isClosed: false }).populate('itemId');
         return NextResponse.json(sells, { status: 200 });
     } catch (err) {
