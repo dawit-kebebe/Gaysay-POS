@@ -20,7 +20,7 @@
     "kenat": "^3.2.0",
     "kenat-ui": "^1.0.0",
     "mongoose": "^8.19.1",
-    "next": "15.5.6",
+    "next": "15.5.9",
     "randomcolor": "^0.6.2",
     "react": "19.1.0",
     "react-chartjs-2": "^5.3.0",
