@@ -1,24 +1,25 @@
 "use client";
 
-import { useLogoutMutation } from '../store/api/auth.api';
+import { signOut } from 'next-auth/react';
 import { useAppDispatch } from '@/app/store';
 import { addToast } from '@/app/store/slice/toast.slice';
+import { useState } from 'react';
 
 const Logout = () => {
-    const [logout, { isLoading }] = useLogoutMutation();
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useAppDispatch();
 
     const handleLogout = async () => {
         if (isLoading) return;
+        setIsLoading(true);
         try {
-            await logout().unwrap();
+            await signOut({ redirect: false });
             dispatch(addToast('Logged out successfully.', 'success'));
             window.location.href = '/login';
         } catch (err) {
             console.error('Logout failed:', err);
-            const logoutErr = err as { data?: { message?: string }; message?: string };
-            const message = logoutErr?.data?.message || logoutErr?.message || 'Logout failed';
-            dispatch(addToast(message, 'failure'));
+            dispatch(addToast('Logout failed', 'failure'));
+            setIsLoading(false);
         }
     };
 

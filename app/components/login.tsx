@@ -1,6 +1,6 @@
 'use client'
 
-import { useLoginMutation } from '@/app/store/api/auth.api'
+import { signIn } from 'next-auth/react'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, Checkbox, Label, TextInput, Toast } from 'flowbite-react'
 import { useState } from 'react'
@@ -23,7 +23,7 @@ const LoginForm = () => {
     const [serverMessage, setServerMessage] = useState<string | null>(null)
     const [serverError, setServerError] = useState<string | null>(null)
 
-    const [login, { isLoading: isMutating }] = useLoginMutation()
+    const [isMutating, setIsMutating] = useState(false)
 
     const {
         register,
@@ -39,24 +39,27 @@ const LoginForm = () => {
     const onSubmit = async (values: LoginFormValues) => {
         setServerMessage(null)
         setServerError(null)
+        setIsMutating(true)
 
         try {
-            const res = await login(values)
+            const res = await signIn('credentials', {
+                redirect: false,
+                username: values.username,
+                password: values.password,
+                remember: values.remember ? 'true' : 'false',
+            });
 
-            if ('error' in res) {
-                const errorMessage =
-                    res.error && 'data' in res.error && (res.error.data as { message?: string })?.message
-                        ? (res.error.data as { message?: string })?.message
-                        : 'Login failed'
-
-                setServerError(errorMessage || 'Unexpected error.')
-            } else {
-                const message = res.data?.message || 'Success'
-                setServerMessage(message)
+            if (res?.error) {
+                setServerError(res.error || 'Login failed.')
+            } else if (res?.ok) {
+                setServerMessage('Success')
+                // For a smooth experience, push softly or href
                 window.location.href = '/dashboard'
             }
         } catch (err) {
             setServerError(String(err) || 'Unexpected Error')
+        } finally {
+            setIsMutating(false)
         }
     }
 

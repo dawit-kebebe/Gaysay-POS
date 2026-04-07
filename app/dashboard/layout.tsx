@@ -1,4 +1,5 @@
-import pageGuard from '@/app/common/guards/page.guard';
+import { authOptions } from '@/app/common/auth/options';
+import { getServerSession } from 'next-auth';
 import { roleToNav } from '@/app/common/guards/role.guard';
 import { NavBarLink } from '@/app/common/types/navbar';
 import { User } from '@/app/common/types/user';
@@ -14,14 +15,14 @@ const DashboardLayout = async ({ children }: DashboardLayoutProps) => {
     let user: User | undefined;
 
     try {
-        const isAuth = await pageGuard();
-        if (isAuth && isAuth.role) {
-            navLinks = roleToNav(isAuth.role);
+        const session = await getServerSession(authOptions);
+        if (session?.user && (session.user as any).role) {
+            navLinks = roleToNav((session.user as any).role);
             user = {
-                name: isAuth.name,
-                username: isAuth.username,
-                role: isAuth.role,
-                avatarUrl: isAuth.avatarUrl
+                name: (session.user as any).name,
+                username: (session.user as any).username,
+                role: (session.user as any).role,
+                avatarUrl: (session.user as any).avatarUrl || undefined
             }
         } else {
             throw new Error('Unauthorized');

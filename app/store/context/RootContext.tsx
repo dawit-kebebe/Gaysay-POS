@@ -4,6 +4,7 @@ import { store } from '@/app/store';
 import React from 'react';
 import { Provider } from 'react-redux';
 import ToastContainer from './ToastContainer';
+import SessionProviderWrapper from './SessionProviderWrapper';
 
 interface RootContextProps {
     children: React.ReactNode
@@ -11,10 +12,12 @@ interface RootContextProps {
 
 const RootContext = ({children}: RootContextProps) => {
   return (
-    <Provider store={store}>
-      <ToastContainer />
-        {children}
-    </Provider>
+    <SessionProviderWrapper>
+        <Provider store={store}>
+          <ToastContainer />
+            {children}
+        </Provider>
+    </SessionProviderWrapper>
   )
 }
 

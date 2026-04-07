@@ -1,4 +1,5 @@
-import pageGuard from '@/app/common/guards/page.guard'
+import { authOptions } from '@/app/common/auth/options';
+import { getServerSession } from 'next-auth';
 import { NavBar } from '@/app/components/navbar'
 import { redirect } from 'next/navigation'
 import React from 'react'
@@ -9,8 +10,8 @@ interface LoginLayoutProps {
 
 const LoginLayout = async ({ children }: LoginLayoutProps) => {
     try {
-        const isAuth = await pageGuard();
-        if (isAuth) redirect('/dashboard');
+        const session = await getServerSession(authOptions);
+        if (session?.user) redirect('/dashboard');
     } catch (err) {
         if (process.env.NODE_ENV === 'development') {
             console.log('Error: ', err)

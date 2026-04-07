@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import type { TypedUseSelectorHook } from 'react-redux';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { authApi } from './api/auth.api';
 import { expenseApi } from './api/expense.api';
 import { menuApi } from './api/menu.api';
 import { openSellsApi } from './api/open-sells.api';
@@ -27,7 +26,6 @@ export const store = configureStore({
     report: reportReducer,
     user: userReducer,
 
-    [authApi.reducerPath]: authApi.reducer,
     [menuApi.reducerPath]: menuApi.reducer,
     // [sellsApi.reducerPath]: sellsApi.reducer,
     [openSellsApi.reducerPath]: openSellsApi.reducer,
@@ -38,7 +36,6 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
 
-      authApi.middleware,
       menuApi.middleware,
       // sellsApi.middleware,
       openSellsApi.middleware,
