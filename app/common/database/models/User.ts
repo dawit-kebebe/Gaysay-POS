@@ -2,6 +2,7 @@ import { Role } from '@/app/common/types/role'
 import type { User as UserType } from '@/app/common/types/user'
 import { Schema, model, models, type Document, type Model } from 'mongoose'
 import { AuditDocument } from '@/app/common/types/audit'
+import bcrypt from 'bcryptjs'
 
 interface UserDocument extends AuditDocument, Document, Omit<UserType, 'id'> { }
 
@@ -22,6 +23,20 @@ const UserSchema = new Schema<UserDocument>(
     },
     { timestamps: true }
 )
+
+UserSchema.pre('save', async function(next) {
+    if (!this.isModified('password') || !this.password) {
+        return next()
+    }
+
+    try {
+        const salt = await bcrypt.genSalt(10)
+        this.password = await bcrypt.hash(this.password, salt)
+        next()
+    } catch (error: any) {
+        next(error)
+    }
+})
 
 // Ensure password is never output and normalize id field
 UserSchema.set('toJSON', {
