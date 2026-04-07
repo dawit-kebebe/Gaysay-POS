@@ -25,7 +25,7 @@ MenuSchema.set('toJSON', {
     versionKey: false,
     transform: (_doc, ret) => {
         ret.id = ret._id?.toString()
-        delete ret._id
+        delete (ret as any)._id
         return ret
     },
 })
