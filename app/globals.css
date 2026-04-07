@@ -1,8 +1,8 @@
-@import "tailwindcss";
+/* @import "tailwindcss";
+@import "flowbite-react/plugin/tailwindcss";
 
 @tailwind utilities;
 
-@plugin "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
 
 :root {
@@ -13,7 +13,6 @@
     --header-height: 5.02rem;
 }
 
-/* Override font for Amharic language */
 html[lang="am"] {
   --font-sans: var(--font-geez-manuscript), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
@@ -33,13 +32,11 @@ html[lang="am"] {
   --color-primary-900: #7a330d;
   --color-primary-950: #461a02;
 
-  /* --mk-card-crop-bg: #fff; */
 }
 
-/* Tailwind's gray-800 */
-/* .dark {
+.dark {
   --mk-card-crop-bg: #1f2937; 
-} */
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -63,7 +60,42 @@ body {
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+} */
+
+@import "tailwindcss";
+@import "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+
+:root {
+  /* --background: var(--color-pickled-bluewood-50);
+  --foreground: var(--color-pickled-bluewood-950); */
 }
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+
+  --color-primary-50:  #fffbeb;
+  --color-primary-100: #fff4c6;
+  --color-primary-200: #ffe688;
+  --color-primary-300: #ffd44a;
+  --color-primary-400: #ffc430;
+  --color-primary-500: #f99e07;
+  --color-primary-600: #dd7602;
+  --color-primary-700: #b75206;
+  --color-primary-800: #943e0c;
+  --color-primary-900: #7a330d;
+  --color-primary-950: #461a02;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+body {
+  @apply bg-pickled-bluewood-50 text-pickled-bluewood-950 dark:bg-pickled-bluewood-950 dark:text-pickled-bluewood-50 transition-colors duration-300 ease-in-out;
+}
+
 
 button, select, option {
   cursor: pointer;
