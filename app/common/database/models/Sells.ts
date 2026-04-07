@@ -35,9 +35,9 @@ SellsSchema.set('toJSON', {
     virtuals: true,
     versionKey: false,
     transform: (_doc, ret) => {
-        ret.id = ret._id?.toString()
-        delete ret._id
-        return ret
+        const { _id, ...rest } = ret
+        rest.id = _id?.toString()
+        return rest
     },
 })
 
