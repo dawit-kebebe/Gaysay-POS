@@ -66,13 +66,13 @@ const LoginForm = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-1 max-w-md flex-col gap-4 mt-16">
             {serverMessage && (
-                <Toast className="w-full self-stretch">
+                <Toast className="w-full max-w-full self-stretch">
                     <MdDone className="h-5 w-5 text-gray-500 dark:text-gray-400" />
                     <div className="pl-4 text-sm font-normal">{serverMessage}</div>
                 </Toast>
             )}
             {serverError && (
-                <Toast className="w-full self-stretch">
+                <Toast className="w-full max-w-full self-stretch">
                     <BiError className="h-5 w-5 text-red-600 dark:text-red-500" />
                     <div className="pl-4 text-sm font-normal">{serverError}</div>
                 </Toast>

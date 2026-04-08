@@ -75,18 +75,18 @@ body {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
+  --color-primary-50: #f1fcf2;
+  --color-primary-100: #e0f8e2;
+  --color-primary-200: #c2f0c7;
+  --color-primary-300: #92e39b;
+  --color-primary-400: #5ace67;
+  --color-primary-500: #34b343;
+  --color-primary-600: #269333;
+  --color-primary-700: #237c2e;
+  --color-primary-800: #1f5c27;
+  --color-primary-900: #1b4c22;
+  --color-primary-950: #0a290f;
 
-  --color-primary-50:  #fffbeb;
-  --color-primary-100: #fff4c6;
-  --color-primary-200: #ffe688;
-  --color-primary-300: #ffd44a;
-  --color-primary-400: #ffc430;
-  --color-primary-500: #f99e07;
-  --color-primary-600: #dd7602;
-  --color-primary-700: #b75206;
-  --color-primary-800: #943e0c;
-  --color-primary-900: #7a330d;
-  --color-primary-950: #461a02;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

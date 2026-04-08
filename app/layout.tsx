@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Gaysay Coffee",
-	description: "Gaysay coffee expense management system.",
+	title: "Sol Chris",
+	description: "Sol Chris expense management system.",
 };
 
 export default function RootLayout({

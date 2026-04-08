@@ -1,6 +1,6 @@
 import { NavBarLink } from "@/app/common/types/navbar";
 import { User } from "@/app/common/types/user";
-import GaysayLogo from "@/app/components/icons/GaysayLogo";
+import SolLogo from "@/app/components/icons/SolLogo";
 import {
     Avatar,
     DarkThemeToggle,
@@ -26,7 +26,7 @@ export function NavBar({ navbarLinks, user }: NavBarProps) {
     return (
         <Navbar fluid rounded className="my-2 shadow-md">
             <NavbarBrand href="#">
-                <GaysayLogo className="w-fit mr-3 h-6 sm:h-9 text-primary-800 dark:text-primary-600" />
+                <SolLogo className="w-fit mr-3 h-6 sm:h-9 text-primary-800 dark:text-primary-600" />
             </NavbarBrand>
             {user ? (
                 <>
